@@ -1,0 +1,37 @@
+# ---- Dependencies ----
+node_modules/
+
+# ---- Build output ----
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# ---- Environment / secrets ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ---- Local tooling / agent workspace ----
+.workbuddy/
+.agents/
+.aistudio/
+
+# ---- Redundant historical artifacts ----
+# 前端.zip 与 extracted_frontend/ 是 docs/ 原型的早期副本，不纳入版本管理
+前端.zip
+extracted_frontend/
+
+# ---- Editor / OS ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Logs ----
+*.log
+npm-debug.log*
+yarn-error.log*

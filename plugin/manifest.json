@@ -1,0 +1,78 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_appName__",
+  "short_name": "__MSG_appShortName__",
+  "description": "__MSG_appDesc__",
+  "version": "1.0.0",
+  "author": "SmartWebExtractor",
+  "default_locale": "zh_CN",
+  "minimum_chrome_version": "114",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "__MSG_actionTitle__",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "exclude_matches": [
+        "https://chrome.google.com/*"
+      ],
+      "css": ["content/content.css"],
+      "js": [
+        "lib/utils.js",
+        "lib/i18n.js",
+        "lib/storage.js",
+        "lib/ai-providers.js",
+        "lib/markdown.js",
+        "lib/zip.js",
+        "lib/exporter.js",
+        "lib/rule-engine.js",
+        "content/extractor.js",
+        "content/ad-filter.js",
+        "content/table-parser.js",
+        "content/image-collector.js",
+        "content/floating-panel.js",
+        "content/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "contextMenus",
+    "downloads",
+    "scripting"
+  ],
+  "optional_permissions": [],
+  "optional_host_permissions": ["<all_urls>"],
+  "host_permissions": [
+    "https://api.deepseek.com/*",
+    "https://dashscope.aliyuncs.com/*"
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "mac": "Command+Shift+E"
+      },
+      "description": "__MSG_shortcutDesc__"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://api.deepseek.com https://dashscope.aliyuncs.com"
+  }
+}

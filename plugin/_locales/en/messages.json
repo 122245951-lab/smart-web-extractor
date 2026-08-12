@@ -1,0 +1,7 @@
+{
+  "appName": { "message": "Smart Web Extractor" },
+  "appShortName": { "message": "Smart Extractor" },
+  "appDesc": { "message": "AI-powered browser extension to extract key content from web pages in seconds" },
+  "actionTitle": { "message": "Extract Web Page Highlights" },
+  "shortcutDesc": { "message": "Toggle Smart Extraction Panel" }
+}

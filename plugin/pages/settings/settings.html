@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>设置 — 智能网页信息提取器</title>
+<link rel="stylesheet" href="settings.css" />
+</head>
+<body>
+<header class="swe-s-header">
+<div class="swe-s-header__wrap">
+<div class="swe-s-logo">🔮</div>
+<div class="swe-s-header__title">智能网页信息提取器</div>
+<div class="swe-s-header__version">v1.0.0</div>
+</div>
+</header>
+
+<nav class="swe-s-nav">
+<a href="#sec-api" class="swe-s-nav-item swe-s-nav-item--active" data-nav="api">API 配置</a>
+<a href="#sec-triggers" class="swe-s-nav-item" data-nav="triggers">触发方式</a>
+<a href="#sec-rules" class="swe-s-nav-item" data-nav="rules">自定义规则</a>
+<a href="#sec-about" class="swe-s-nav-item" data-nav="about">关于</a>
+</nav>
+
+<main class="swe-s-main">
+
+<section id="sec-api" class="swe-s-section">
+<h2 class="swe-s-section__title">API 配置</h2>
+<div class="swe-s-field">
+<label>默认 AI 供应商</label>
+<select id="default-provider">
+<option value="deepseek">DeepSeek</option>
+<option value="qwen">通义千问</option>
+</select>
+</div>
+<div class="swe-s-field">
+<label>默认模型</label>
+<select id="default-model">
+<option value="deepseek-chat">deepseek-chat</option>
+<option value="deepseek-reasoner">deepseek-reasoner</option>
+<option value="qwen-plus">qwen-plus</option>
+<option value="qwen-max">qwen-max</option>
+<option value="qwen-turbo">qwen-turbo</option>
+</select>
+</div>
+<div class="swe-s-field">
+<label>DeepSeek API Key</label>
+<input type="password" id="api-key-deepseek" placeholder="sk-..." />
+<div class="swe-s-masked" id="masked-deepseek">未配置</div>
+<button class="swe-s-btn swe-s-btn--secondary swe-s-btn--sm" id="save-key-deepseek">保存</button>
+</div>
+<div class="swe-s-field">
+<label>通义千问 API Key</label>
+<input type="password" id="api-key-qwen" placeholder="sk-..." />
+<div class="swe-s-masked" id="masked-qwen">未配置</div>
+<button class="swe-s-btn swe-s-btn--secondary swe-s-btn--sm" id="save-key-qwen">保存</button>
+</div>
+<div class="swe-s-field">
+<label>API Key 安全说明</label>
+<ul class="swe-s-hint-list">
+<li>🔒 API Key 使用 AES-GCM 256 加密存储在本地</li>
+<li>🚫 永不上传至第三方服务器，仅发送至您选择的 AI 供应商</li>
+<li>👁️ UI 中永远以脱敏形式显示（首 4 + 尾 4 位）</li>
+<li>📤 规则导出中永远排除 API Key</li>
+</ul>
+</div>
+<div class="swe-s-field">
+<button class="swe-s-btn swe-s-btn--primary" id="test-conn-deepseek">测试 DeepSeek 连接</button>
+<button class="swe-s-btn swe-s-btn--primary" id="test-conn-qwen">测试通义千问连接</button>
+<div id="test-result" class="swe-s-test-result"></div>
+</div>
+</section>
+
+<section id="sec-triggers" class="swe-s-section" hidden>
+<h2 class="swe-s-section__title">触发方式</h2>
+<div class="swe-s-field"><label class="swe-s-toggle"><input type="checkbox" id="trigger-edge-tab" /> 边沿标签（悬浮面板入口）</label></div>
+<div class="swe-s-field"><label class="swe-s-toggle"><input type="checkbox" id="trigger-context-menu" /> 右键菜单</label></div>
+<div class="swe-s-field">
+<label class="swe-s-toggle"><input type="checkbox" id="trigger-keyboard" /> 键盘快捷键</label>
+<a href="#" id="shortcut-link" class="swe-s-link">键盘快捷键设置 &rarr;</a>
+<p class="swe-s-hint">在浏览器扩展管理页（chrome://extensions/shortcuts）自行修改</p>
+</div>
+<div class="swe-s-field"><label class="swe-s-toggle"><input type="checkbox" id="trigger-floating-btn" /> 浮动按钮（右下角）</label></div>
+<hr>
+<div class="swe-s-field">
+<label>界面语言</label>
+<select id="ui-language"><option value="zh">中文简体</option><option value="en">English</option></select>
+</div>
+<div class="swe-s-field">
+<label>默认摘要模板</label>
+<select id="default-template">
+<option value="brief">文字摘要</option>
+<option value="structured">结构化摘要</option>
+<option value="mindmap">图表化摘要</option>
+<option value="custom">自定义</option>
+</select>
+</div>
+<div class="swe-s-field">
+<label>摘要长度偏好</label>
+<select id="summary-length">
+<option value="short">简短</option>
+<option value="medium" selected>适中</option>
+<option value="long">详细</option>
+</select>
+</div>
+<div class="swe-s-field"><label class="swe-s-toggle"><input type="checkbox" id="include-images" checked /> 提取时收集图片</label></div>
+<div class="swe-s-field"><label class="swe-s-toggle"><input type="checkbox" id="include-tables" checked /> 提取时解析表格</label></div>
+<hr>
+<div class="swe-s-field">
+<label>默认导出格式</label>
+<div class="swe-s-export-formats">
+<label><input type="checkbox" id="export-txt" checked /> TXT</label>
+<label><input type="checkbox" id="export-md" checked /> Markdown</label>
+<label><input type="checkbox" id="export-word" /> Word</label>
+</div>
+</div>
+</section>
+
+<section id="sec-rules" class="swe-s-section" hidden>
+<h2 class="swe-s-section__title">自定义规则</h2>
+<div class="swe-s-field">
+<button class="swe-s-btn swe-s-btn--primary" id="add-rule">+ 添加规则</button>
+<button class="swe-s-btn swe-s-btn--secondary" id="export-rules">导出规则</button>
+<button class="swe-s-btn swe-s-btn--secondary" id="import-rules-btn">导入规则</button>
+<input type="file" id="import-rules-input" accept=".json" style="display:none" />
+</div>
+<div id="rules-list" class="swe-s-rules-list"></div>
+<div id="rule-form" class="swe-s-modal" hidden>
+<div class="swe-s-modal__mask" id="rule-form-mask"></div>
+<div class="swe-s-modal__body">
+<h3 id="rule-form-title">添加规则</h3>
+<div class="swe-s-field"><label>规则名称</label><input type="text" id="rule-name" /></div>
+<div class="swe-s-field"><label>URL 模式 (glob，例如 *://*.zhihu.com/*)</label><input type="text" id="rule-url" placeholder="*://*.example.com/*" /></div>
+<div class="swe-s-field"><label>提取提示词（支持 {content} {title} {url} {images} {tables} {lang} 变量）</label><textarea id="rule-prompt" rows="5"></textarea></div>
+<div class="swe-s-field"><label>提取模式</label><select id="rule-mode"><option value="fullPage">整页提取</option><option value="selection">选中区域</option></select></div>
+<div class="swe-s-field">
+<label class="swe-s-toggle"><input type="checkbox" id="rule-images" checked /> 包含图片</label>
+<label class="swe-s-toggle"><input type="checkbox" id="rule-tables" checked /> 包含表格</label>
+</div>
+<input type="hidden" id="rule-edit-id" />
+<div class="swe-s-modal__actions">
+<button class="swe-s-btn swe-s-btn--primary" id="rule-save">保存规则</button>
+<button class="swe-s-btn swe-s-btn--ghost" id="rule-cancel">取消</button>
+</div>
+</div>
+</div>
+</section>
+
+<section id="sec-about" class="swe-s-section" hidden>
+<h2 class="swe-s-section__title">关于</h2>
+<div class="swe-s-about">
+<p><strong>智能网页信息提取器</strong> — v1.0.0</p>
+<p>AI 驱动的浏览器插件，帮助您在 30 秒内从冗长网页中提取干货精华——去广告、取正文、收图片、析表格，一键生成结构化摘要并导出。</p>
+<h3>主要特性</h3>
+<ul>
+<li>✅ 正文提取 — 基于文本密度算法，识别准确率 ≥ 85%</li>
+<li>✅ 图片提取 — 自动聚合、分类、可选 AI 描述</li>
+<li>✅ 表格提取 — 识别 HTML 表格及类表格结构</li>
+<li>✅ 广告过滤 — 静默过滤与预览净化双模式</li>
+<li>✅ AI 摘要 — 支持 DeepSeek / 通义千问</li>
+<li>✅ 多格式导出 — TXT / Markdown / Word</li>
+<li>✅ 悬浮边沿面板 — 30 秒提取 + 导出</li>
+<li>✅ 自定义规则 — 按站点绑定不同提取策略</li>
+<li>✅ 中英双语 — 跟随浏览器语言</li>
+</ul>
+<h3>支持的 AI 供应商</h3>
+<ul>
+<li>DeepSeek — Endpoint: api.deepseek.com，模型：deepseek-chat</li>
+<li>通义千问 — Endpoint: dashscope.aliyuncs.com，模型：qwen-plus</li>
+</ul>
+<h3>隐私安全</h3>
+<ul>
+<li>✅ 纯前端运行，无第三方服务器</li>
+<li>✅ API Key 加密存储，永不上传</li>
+<li>✅ 数据仅发送至您配置的 AI 供应商</li>
+</ul>
+</div>
+</section>
+</main>
+
+<footer class="swe-s-footer">
+<button class="swe-s-btn swe-s-btn--primary" id="save-settings">保存设置</button>
+<span id="save-msg" class="swe-s-save-msg"></span>
+</footer>
+
+<script src="../lib/utils.js"></script>
+<script src="../lib/i18n.js"></script>
+<script src="../lib/storage.js"></script>
+<script src="../lib/ai-providers.js"></script>
+<script src="../lib/exporter.js"></script>
+<script src="../lib/markdown.js"></script>
+<script src="../lib/rule-engine.js"></script>
+<script src="settings.js"></script>
+</body>
+</html>

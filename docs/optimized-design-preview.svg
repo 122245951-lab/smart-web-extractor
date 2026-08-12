@@ -1,0 +1,222 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" width="1400" height="900">
+  <defs>
+    <linearGradient id="primaryGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+    <linearGradient id="adBarGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EEF2FF"/>
+      <stop offset="100%" stop-color="#E0E7FF"/>
+    </linearGradient>
+    <linearGradient id="triggerGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+    <linearGradient id="brandIcon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <filter id="panelShadow">
+      <feDropShadow dx="-4" dy="0" stdDeviation="8" flood-color="rgba(0,0,0,0.04)"/>
+    </filter>
+    <filter id="triggerShadow">
+      <feDropShadow dx="-2" dy="0" stdDeviation="10" flood-color="rgba(79,70,229,0.3)"/>
+    </filter>
+    <filter id="titlebarBlur">
+      <feGaussianBlur stdDeviation="0.5"/>
+    </filter>
+    <clipPath id="mainClip">
+      <rect x="40" y="40" width="1320" height="800" rx="20"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="900" fill="#0A0A1A" rx="0"/>
+
+  <!-- Workspace Container -->
+  <rect x="60" y="60" width="1280" height="760" rx="20" fill="#14142B"/>
+  <rect x="60" y="60" width="1280" height="760" rx="20" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+  <!-- Browser Zone (left area, flex: 1) -->
+  <rect x="60" y="60" width="820" height="760" rx="20" fill="#F8F9FC"/>
+  <rect x="60" y="400" width="820" height="420" fill="#F8F9FC"/>
+
+  <!-- Titlebar -->
+  <rect x="60" y="60" width="820" height="48" fill="rgba(255,255,255,0.85)" rx="20"/>
+  <rect x="60" y="96" width="820" height="12" fill="rgba(255,255,255,0.85)"/>
+  <rect x="60" y="92" width="820" height="1" fill="rgba(0,0,0,0.04)"/>
+
+  <!-- Traffic Lights -->
+  <circle cx="85" cy="84" r="6" fill="#FF5F57"/>
+  <circle cx="101" cy="84" r="6" fill="#FEBC2E"/>
+  <circle cx="117" cy="84" r="6" fill="#28C840"/>
+
+  <!-- Nav Arrows -->
+  <text x="136" y="89" font-family="monospace" font-size="14" fill="#8E8EA0">◀</text>
+  <text x="153" y="89" font-family="monospace" font-size="14" fill="#8E8EA0">▶</text>
+  <text x="170" y="89" font-family="monospace" font-size="14" fill="#555">↻</text>
+
+  <!-- Tab Bar -->
+  <rect x="192" y="72" width="216" height="24" rx="10" fill="rgba(0,0,0,0.03)"/>
+  <rect x="194" y="74" width="68" height="20" rx="8" fill="#fff"/>
+  <text x="206" y="88" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#4F46E5">知乎专栏</text>
+  <text x="270" y="88" font-family="Inter, sans-serif" font-size="11" fill="#666">VerveX 商城</text>
+  <text x="360" y="88" font-family="Inter, sans-serif" font-size="11" fill="#666">arXiv 论文</text>
+
+  <!-- URL Bar -->
+  <rect x="428" y="72" width="280" height="24" rx="14" fill="rgba(0,0,0,0.04)"/>
+  <text x="444" y="89" font-family="monospace" font-size="9" fill="#22C55E">🔒</text>
+  <text x="456" y="89" font-family="monospace" font-size="10" fill="#999">https://zhuanlan.zhihu.com/p/ai</text>
+  <rect x="672" y="75" width="28" height="18" rx="3" fill="rgba(22,163,74,0.1)"/>
+  <text x="676" y="87" font-family="sans-serif" font-size="7" font-weight="700" fill="#16A34A">SECURE</text>
+
+  <!-- AD Filter Bar -->
+  <rect x="60" y="108" width="820" height="36" fill="url(#adBarGrad)"/>
+  <text x="80" y="131" font-family="sans-serif" font-size="13">🎛️</text>
+  <text x="96" y="131" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#3730A3">广告净化器</text>
+  <text x="186" y="131" font-family="Inter, sans-serif" font-size="10" fill="#6366F1">AI 自动检测并过滤网页广告</text>
+
+  <!-- Toggle Group -->
+  <rect x="650" y="116" width="180" height="20" rx="8" fill="#fff"/>
+  <rect x="652" y="118" width="88" height="16" rx="6" fill="#4F46E5"/>
+  <text x="670" y="130" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#fff">静默过滤</text>
+  <text x="752" y="130" font-family="Inter, sans-serif" font-size="9" fill="#666">预览高亮</text>
+
+  <!-- Viewport Content -->
+  <!-- Article Title -->
+  <text x="100" y="180" font-family="Inter, sans-serif" font-size="22" font-weight="800" fill="#111">深度学习在自然语言处理中的突破性进展</text>
+
+  <!-- Meta -->
+  <text x="100" y="204" font-family="Inter, sans-serif" font-size="10" fill="#94A3B8">📅 2024-12-15</text>
+  <text x="196" y="204" font-family="Inter, sans-serif" font-size="10" fill="#94A3B8">👤 作者：张明远</text>
+
+  <!-- Article paragraphs -->
+  <text x="100" y="232" font-family="Inter, sans-serif" font-size="12" fill="#475569">近年来，深度学习技术为自然语言处理（NLP）领域带来了革命性的突破。从 Transformer</text>
+  <text x="100" y="250" font-family="Inter, sans-serif" font-size="12" fill="#475569">架构的问世，到 GPT、BERT 等大规模预训练模型的崛起，机器理解人类语言的能力已经达到了</text>
+  <text x="100" y="268" font-family="Inter, sans-serif" font-size="12" fill="#475569">前所未有的高度。</text>
+
+  <text x="100" y="296" font-family="Inter, sans-serif" font-size="12" fill="#475569">2024 年，多模态大语言模型（MLLM）进一步模糊了文本、图像、音频之间的边界。以 GPT-4V、</text>
+  <text x="100" y="314" font-family="Inter, sans-serif" font-size="12" fill="#475569">Gemini Ultra 为代表的模型不仅能理解文字，更能同时「看懂」图片和「听懂」语音。</text>
+
+  <!-- Blockquote -->
+  <rect x="100" y="330" width="620" height="40" rx="8" fill="#F8FAFC"/>
+  <rect x="100" y="330" width="3" height="40" fill="#4F46E5" rx="2"/>
+  <text x="116" y="348" font-family="Inter, sans-serif" font-size="11" font-style="italic" fill="#475569">「语言是人类智慧的结晶，而 AI 正在学会用语言思考。」</text>
+  <text x="116" y="363" font-family="Inter, sans-serif" font-size="11" font-style="italic" fill="#475569">— 李开复</text>
+
+  <!-- AD Highlight Block -->
+  <rect x="100" y="386" width="620" height="36" rx="8" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.5" stroke-dasharray="4"/>
+  <rect x="100" y="380" width="124" height="14" rx="4" fill="#FEF2F2"/>
+  <text x="108" y="391" font-family="sans-serif" font-size="8" font-weight="700" fill="#EF4444">🛡️ AD BLOCK DETECTED</text>
+  <text x="116" y="408" font-family="Inter, sans-serif" font-size="11" fill="#DC2626">🔥 限时特惠：AI 深度学习实战课程，原价 2999 元，今日仅售 199 元！</text>
+
+  <!-- More text -->
+  <text x="100" y="440" font-family="Inter, sans-serif" font-size="12" fill="#475569">在具体应用层面，大模型在机器翻译、情感分析、信息抽取等传统 NLP 任务上均取得了显著的</text>
+  <text x="100" y="458" font-family="Inter, sans-serif" font-size="12" fill="#475569">性能提升。更重要的是，In-Context Learning 能力的发现使得模型无需微调即可适应新任务。</text>
+
+  <!-- Status Bar -->
+  <rect x="60" y="804" width="820" height="16" fill="#F1F5F9"/>
+  <text x="80" y="815" font-family="monospace" font-size="8" fill="#94A3B8">RENDER ENGINE: CHROMIUM SIMULATOR MV3 • HOST: OK</text>
+  <text x="620" y="815" font-family="monospace" font-size="8" fill="#94A3B8">COOKIE: DOMAIN_ONLY • LATENCY: 12ms</text>
+
+  <!-- ===== Edge Trigger ===== -->
+  <rect x="876" y="400" width="44" height="120" rx="12 0 0 12" fill="url(#triggerGrad)" filter="url(#triggerShadow)"/>
+  <text x="892" y="432" font-family="sans-serif" font-size="14" fill="#fff">✦</text>
+  <text x="884" y="464" font-family="Inter, sans-serif" font-size="7" font-weight="800" fill="#fff" letter-spacing="2" text-anchor="middle" transform="rotate(90, 898, 464)">AI 面板</text>
+  <text x="898" y="502" font-family="sans-serif" font-size="12" fill="rgba(255,255,255,0.7)">›</text>
+
+  <!-- ===== AI Panel ===== -->
+  <rect x="920" y="60" width="420" height="760" rx="0 20 20 0" fill="#fff" filter="url(#panelShadow)"/>
+
+  <!-- Panel Header -->
+  <rect x="920" y="60" width="420" height="56" fill="#fff" rx="0 20 0 0"/>
+  <rect x="920" y="108" width="420" height="8" fill="#fff"/>
+  <rect x="920" y="116" width="420" height="1" fill="#F1F5F9"/>
+
+  <!-- Brand Icon -->
+  <rect x="940" y="73" width="30" height="30" rx="8" fill="url(#brandIcon)"/>
+  <text x="948" y="93" font-family="sans-serif" font-size="14" fill="#fff">✦</text>
+
+  <!-- Brand Text -->
+  <text x="980" y="85" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#1E293B">智能网页提取器</text>
+  <text x="980" y="98" font-family="Inter, sans-serif" font-size="9" fill="#94A3B8">AI Browser Companion • MV3</text>
+
+  <!-- Close button -->
+  <text x="1310" y="88" font-family="sans-serif" font-size="16" fill="#94A3B8">✕</text>
+
+  <!-- Panel Tabs -->
+  <rect x="920" y="124" width="420" height="36" fill="#fff"/>
+  <rect x="936" y="130" width="97" height="24" rx="8" fill="#EEF2FF"/>
+  <text x="956" y="147" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#4F46E5">📄 大纲</text>
+  <text x="1042" y="147" font-family="Inter, sans-serif" font-size="10" fill="#94A3B8">🖼️ 配图</text>
+  <text x="1138" y="147" font-family="Inter, sans-serif" font-size="10" fill="#94A3B8">📊 表格</text>
+  <text x="1222" y="147" font-family="Inter, sans-serif" font-size="10" fill="#94A3B8">✏️ 编辑</text>
+
+  <!-- Tab indicator -->
+  <rect x="974" y="158" width="20" height="2" rx="1" fill="#4F46E5"/>
+
+  <!-- Summary Card -->
+  <rect x="936" y="172" width="388" height="140" rx="12" fill="#F8FAFC" stroke="#F1F5F9" stroke-width="1"/>
+  <text x="952" y="192" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#0F172A">📋 AI 提取摘要</text>
+  <text x="952" y="210" font-family="Inter, sans-serif" font-size="10" fill="#475569">
+    <tspan font-weight="600">🧠 核心主题：</tspan>深度学习在 NLP 领域的技术突破
+  </text>
+  <text x="952" y="226" font-family="Inter, sans-serif" font-size="10" fill="#475569">
+    <tspan font-weight="600">📌 关键要点：</tspan>Transformer → GPT/BERT → 多模态
+  </text>
+  <circle cx="958" cy="241" r="2" fill="#94A3B8"/>
+  <text x="964" y="244" font-family="Inter, sans-serif" font-size="9" fill="#475569">In-Context Learning 使模型无需微调即可适应新任务</text>
+  <circle cx="958" cy="255" r="2" fill="#94A3B8"/>
+  <text x="964" y="258" font-family="Inter, sans-serif" font-size="9" fill="#475569">Mamba/RWKV 等 SSM 架构探索更高效的计算方案</text>
+  <text x="952" y="278" font-family="Inter, sans-serif" font-size="9" fill="#94A3B8">📍 本地 DOM 提取：正文 1,240 字 | 图片 3 张 | 表格 0 份</text>
+
+  <!-- Template Selector -->
+  <text x="936" y="336" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#64748B">提取模板</text>
+  <rect x="936" y="342" width="190" height="28" rx="8" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1"/>
+  <rect x="936" y="342" width="190" height="28" rx="8" fill="none" stroke="#4F46E5" stroke-width="1"/>
+  <text x="986" y="361" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#4F46E5">📝 3-5句速读</text>
+  <rect x="1130" y="342" width="190" height="28" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="1180" y="361" font-family="Inter, sans-serif" font-size="10" fill="#475569">📇 结构化卡片</text>
+
+  <!-- Custom Prompt -->
+  <text x="936" y="392" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#64748B">自定义 Prompt</text>
+  <rect x="936" y="398" width="388" height="30" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="948" y="418" font-family="Inter, sans-serif" font-size="10" fill="#94A3B8">提取所有技术术语并附上英文对照...</text>
+
+  <!-- Extract Button -->
+  <rect x="936" y="440" width="388" height="36" rx="10" fill="url(#primaryGrad)"/>
+  <text x="1104" y="463" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#fff">⚡ 一键智能提取</text>
+
+  <!-- Action Buttons -->
+  <rect x="936" y="484" width="124" height="28" rx="8" fill="#fff" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="974" y="503" font-family="Inter, sans-serif" font-size="10" font-weight="500" fill="#475569">📥 下载</text>
+  <rect x="1068" y="484" width="124" height="28" rx="8" fill="#fff" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="1106" y="503" font-family="Inter, sans-serif" font-size="10" font-weight="500" fill="#475569">🔧 规则</text>
+  <rect x="1200" y="484" width="124" height="28" rx="8" fill="#fff" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="1238" y="503" font-family="Inter, sans-serif" font-size="10" font-weight="500" fill="#475569">⚙️ 设置</text>
+
+  <!-- Chat Messages -->
+  <!-- User message -->
+  <rect x="936" y="524" width="388" height="30" rx="10" fill="#F8FAFC"/>
+  <text x="952" y="544" font-family="Inter, sans-serif" font-size="10" fill="#334155">
+    <tspan font-weight="500">🧑 用户：</tspan>翻译为英文，并将技术名词加粗
+  </text>
+
+  <!-- AI message -->
+  <rect x="936" y="562" width="388" height="40" rx="10" fill="#EEF2FF"/>
+  <text x="952" y="580" font-family="Inter, sans-serif" font-size="10" fill="#334155">
+    <tspan font-weight="500">✦ AI：</tspan>好的，已为您将全文翻译为英文，并将 Deep Learning、
+  </text>
+  <text x="952" y="596" font-family="Inter, sans-serif" font-size="10" fill="#334155">Transformer、In-Context Learning 等技术名词加粗显示。</text>
+
+  <!-- Chat Input -->
+  <rect x="920" y="780" width="420" height="40" fill="#fff"/>
+  <rect x="920" y="780" width="420" height="1" fill="#F1F5F9"/>
+  <rect x="936" y="790" width="358" height="28" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="948" y="809" font-family="Inter, sans-serif" font-size="10" fill="#94A3B8">输入修改指令，如：翻译为英文...</text>
+  <rect x="1298" y="790" width="30" height="28" rx="8" fill="#4F46E5"/>
+  <text x="1306" y="809" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#fff">➤</text>
+
+  <!-- Section labels -->
+  <text x="60" y="40" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="rgba(255,255,255,0.5)" letter-spacing="1">交互设计优化原型 — Smart Web Extractor Pro</text>
+</svg>

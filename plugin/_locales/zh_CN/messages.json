@@ -1,0 +1,7 @@
+{
+  "appName": { "message": "智能网页信息提取器" },
+  "appShortName": { "message": "智能提取器" },
+  "appDesc": { "message": "AI 驱动的浏览器插件，帮助您在 30 秒内从冗长网页中提取干货精华" },
+  "actionTitle": { "message": "智能提取网页精华" },
+  "shortcutDesc": { "message": "打开/关闭智能提取面板" }
+}

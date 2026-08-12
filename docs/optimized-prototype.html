@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Web Extractor — 优化交互设计原型</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0a0a1a;
+    color: #fff;
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+
+  /* ===== Section Wrapper ===== */
+  .section { max-width: 1400px; width: 100%; }
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.15), transparent);
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    text-align: center;
+    padding: 60px 20px 40px;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.5);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ===== Desktop App Mock ===== */
+  .workspace {
+    position: relative;
+    width: 100%;
+    max-width: 1280px;
+    height: 760px;
+    background: #14142b;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    display: flex;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  }
+
+  /* Browser Area */
+  .browser-zone {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f8f9fc;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* macOS-style titlebar */
+  .titlebar {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .traffic-lights {
+    display: flex;
+    gap: 8px;
+  }
+  .traffic-lights span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transition: transform 0.15s;
+    cursor: pointer;
+  }
+  .traffic-lights span:hover { transform: scale(1.2); }
+  .traffic-lights span:nth-child(1) { background: #ff5f57; }
+  .traffic-lights span:nth-child(2) { background: #febc2e; }
+  .traffic-lights span:nth-child(3) { background: #28c840; }
+  .traffic-lights span:nth-child(1):hover { background: #e04e48; }
+  .traffic-lights span:nth-child(2):hover { background: #e0a828; }
+  .traffic-lights span:nth-child(3):hover { background: #22b035; }
+
+  .nav-arrows {
+    display: flex;
+    gap: 4px;
+    color: #8e8ea0;
+  }
+  .nav-arrows button {
+    background: none;
+    border: none;
+    color: #8e8ea0;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.15s;
+  }
+  .nav-arrows button:hover { background: rgba(0,0,0,0.05); color: #333; }
+  .nav-arrows button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .tab-bar {
+    display: flex;
+    gap: 2px;
+    background: rgba(0,0,0,0.03);
+    padding: 3px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  .tab-bar button {
+    background: none;
+    border: none;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .tab-bar button:hover { color: #222; }
+  .tab-bar button.active {
+    background: #fff;
+    color: #4f46e5;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .url-bar {
+    flex: 1;
+    max-width: 420px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,0.04);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: #999;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+  .url-bar:focus-within {
+    border-color: #4f46e5;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
+  }
+  .url-bar .lock { color: #22c55e; font-size: 11px; }
+  .url-bar .secure-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #16a34a;
+    background: rgba(22,163,74,0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* AD Filter bar */
+  .ad-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    border-bottom: 1px solid rgba(79,70,229,0.08);
+    flex-shrink: 0;
+  }
+  .ad-bar .icon { color: #4f46e5; font-size: 14px; }
+  .ad-bar .label { font-size: 11px; font-weight: 600; color: #3730a3; }
+  .ad-bar .desc { font-size: 10px; color: #6366f1; }
+  .ad-toggle-group {
+    margin-left: auto;
+    display: flex;
+    gap: 4px;
+    background: #fff;
+    padding: 2px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .ad-toggle-group button {
+    background: none;
+    border: none;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    color: #666;
+  }
+  .ad-toggle-group button:hover { color: #333; }
+  .ad-toggle-group button.active {
+    background: #4f46e5;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(79,70,229,0.3);
+  }
+
+  /* Page content */
+  .viewport {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 40px;
+    background: #fff;
+  }
+  .viewport::-webkit-scrollbar { width: 6px; }
+  .viewport::-webkit-scrollbar-track { background: transparent; }
+  .viewport::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 3px; }
+
+  .article h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #111;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+  .article .meta {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .article .meta a { color: #4f46e5; text-decoration: none; }
+  .article p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #334155;
+    margin-bottom: 16px;
+  }
+  .article blockquote {
+    border-left: 3px solid #4f46e5;
+    padding-left: 20px;
+    margin: 20px 0;
+    color: #475569;
+    font-style: italic;
+    background: #f8fafc;
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+  }
+  .article .ad-highlight {
+    border: 2px dashed #ef4444;
+    background: #fef2f2;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 20px 0;
+    position: relative;
+    font-size: 13px;
+    color: #dc2626;
+  }
+  .article .ad-highlight::before {
+    content: '🛡️ AD BLOCK DETECTED';
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: #fef2f2;
+    padding: 0 8px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #ef4444;
+  }
+
+  /* ===== Edge Trigger Pill ===== */
+  .edge-trigger {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 120px;
+    background: linear-gradient(180deg, #4f46e5, #6366f1);
+    border-radius: 12px 0 0 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    z-index: 50;
+    color: #fff;
+    box-shadow: -4px 0 20px rgba(79,70,229,0.3);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: none;
+    font-family: inherit;
+  }
+  .edge-trigger:hover {
+    width: 52px;
+    box-shadow: -6px 0 28px rgba(79,70,229,0.4);
+  }
+  .edge-trigger .sparkle-icon {
+    font-size: 16px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .edge-trigger .label {
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+  }
+  .edge-trigger .arrow {
+    font-size: 12px;
+    opacity: 0.7;
+    transition: transform 0.2s;
+  }
+  .edge-trigger:hover .arrow { transform: translateX(2px); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.15); }
+  }
+
+  /* ===== AI Panel (Drawer) ===== */
+  .ai-panel {
+    width: 420px;
+    background: #fff;
+    border-left: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 40;
+    box-shadow: -8px 0 30px rgba(0,0,0,0.04);
+    animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    flex-shrink: 0;
+  }
+  .panel-header .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .panel-header .brand-icon {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(79,70,229,0.2);
+  }
+  .panel-header .brand-text h2 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    letter-spacing: 0.3px;
+  }
+  .panel-header .brand-text p {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 1px;
+  }
+  .panel-header .close-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    font-size: 18px;
+    transition: all 0.15s;
+  }
+  .panel-header .close-btn:hover { background: #f1f5f9; color: #475569; }
+
+  /* Tabs */
+  .panel-tabs {
+    display: flex;
+    padding: 8px 16px;
+    gap: 4px;
+    border-bottom: 1px solid #f1f5f9;
+    flex-shrink: 0;
+  }
+  .panel-tabs button {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 8px 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #94a3b8;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .panel-tabs button:hover { color: #475569; background: #f8fafc; }
+  .panel-tabs button.active {
+    color: #4f46e5;
+    background: #eef2ff;
+    font-weight: 600;
+  }
+  .panel-tabs button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background: #4f46e5;
+    border-radius: 1px;
+  }
+
+  .panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+  }
+  .panel-content::-webkit-scrollbar { width: 4px; }
+  .panel-content::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+
+  /* Summary Card */
+  .summary-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #334155;
+    border: 1px solid #f1f5f9;
+  }
+  .summary-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Settings section */
+  .settings-group {
+    margin-bottom: 16px;
+  }
+  .settings-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .template-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .template-grid button {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    text-align: center;
+  }
+  .template-grid button:hover { border-color: #6366f1; color: #4f46e5; }
+  .template-grid button.active {
+    border-color: #4f46e5;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 600;
+    box-shadow: 0 0 0 1px #4f46e5;
+  }
+
+  .input-field {
+    width: 100%;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #1e293b;
+    font-family: inherit;
+    transition: all 0.15s;
+    outline: none;
+  }
+  .input-field:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
+    background: #fff;
+  }
+
+  .primary-btn {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+  }
+  .primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79,70,229,0.3);
+  }
+  .primary-btn:active { transform: translateY(0); }
+
+  .secondary-btn {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .secondary-btn:hover { border-color: #cbd5e1; background: #f8fafc; }
+
+  /* Chat input */
+  .chat-area {
+    border-top: 1px solid #f1f5f9;
+    padding: 12px 20px;
+    flex-shrink: 0;
+  }
+  .chat-input-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 4px;
+    transition: all 0.15s;
+  }
+  .chat-input-wrap:focus-within {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
+    background: #fff;
+  }
+  .chat-input-wrap input {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 8px 8px 8px 12px;
+    font-size: 12px;
+    color: #1e293b;
+    font-family: inherit;
+    outline: none;
+  }
+  .chat-input-wrap button {
+    background: #4f46e5;
+    border: none;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .chat-input-wrap button:hover { background: #6366f1; }
+
+  /* ===== Design Spec Cards ===== */
+  .design-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .design-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.2s;
+  }
+  .design-card:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+  .design-card .card-icon { font-size: 28px; margin-bottom: 12px; }
+  .design-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .design-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+  }
+  .design-card ul {
+    list-style: none;
+    margin-top: 12px;
+  }
+  .design-card ul li {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    padding: 4px 0;
+    padding-left: 16px;
+    position: relative;
+  }
+  .design-card ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #6366f1;
+  }
+
+  /* ===== Flow Diagram ===== */
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 40px 0;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 24px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    transition: all 0.2s;
+    min-width: 140px;
+  }
+  .flow-step .step-icon { font-size: 24px; }
+  .flow-step .step-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.8);
+  }
+  .flow-step .step-desc {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+  }
+  .flow-arrow {
+    font-size: 20px;
+    color: rgba(255,255,255,0.15);
+    padding: 0 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="section hero">
+  <h1>Smart Web Extractor Pro</h1>
+  <p>经过全面优化的浏览器扩展交互设计方案 — 融合玻璃拟态、微交互动效与 Ant Design 设计体系</p>
+</div>
+
+<!-- ===== Interactive Prototype ===== -->
+<div class="section">
+  <div class="section-title">交互原型</div>
+
+  <div class="workspace">
+    <!-- Browser Zone -->
+    <div class="browser-zone">
+      <!-- Title Bar -->
+      <div class="titlebar">
+        <div class="traffic-lights">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="nav-arrows">
+          <button disabled>◀</button>
+          <button disabled>▶</button>
+          <button>↻</button>
+        </div>
+        <div class="tab-bar">
+          <button class="active">知乎专栏</button>
+          <button>VerveX 商城</button>
+          <button>arXiv 论文</button>
+        </div>
+        <div class="url-bar">
+          <span class="lock">🔒</span>
+          <span>https://zhuanlan.zhihu.com/p/ai-deep-learning-2024</span>
+          <span class="secure-badge">SECURE</span>
+        </div>
+      </div>
+
+      <!-- AD Filter Bar -->
+      <div class="ad-bar">
+        <span class="icon">🎛️</span>
+        <span class="label">广告净化器</span>
+        <span class="desc">AI 自动检测并过滤网页广告</span>
+        <div class="ad-toggle-group">
+          <button class="active">静默过滤</button>
+          <button>预览高亮</button>
+        </div>
+      </div>
+
+      <!-- Viewport -->
+      <div class="viewport">
+        <div class="article">
+          <h1>深度学习在自然语言处理中的突破性进展</h1>
+          <div class="meta">
+            <span>📅 2024-12-15</span>
+            <span>👤 作者：张明远</span>
+            <span>🔗 <a href="#">https://zhuanlan.zhihu.com/p/deep-learning-nlp</a></span>
+          </div>
+          <p>近年来，深度学习技术为自然语言处理（NLP）领域带来了革命性的突破。从 Transformer 架构的问世，到 GPT、BERT 等大规模预训练模型的崛起，机器理解人类语言的能力已经达到了前所未有的高度。</p>
+          <p>2024 年，多模态大语言模型（MLLM）进一步模糊了文本、图像、音频之间的边界。以 GPT-4V、Gemini Ultra 为代表的模型不仅能理解文字，更能同时「看懂」图片和「听懂」语音。</p>
+          <blockquote>「语言是人类智慧的结晶，而 AI 正在学会用语言思考。这不仅是技术的进步，更是人类文明与机器文明对话的新篇章。」— 李开复</blockquote>
+          <p>在具体应用层面，大模型在机器翻译、情感分析、信息抽取等传统 NLP 任务上均取得了显著的性能提升。更重要的是，In-Context Learning（上下文学习）能力的发现，使得模型无需微调即可适应新任务。</p>
+          <p>然而，挑战依然存在。推理成本、幻觉问题、数据隐私等议题仍然是业界关注的核心焦点。未来，更高效的小型模型和更可靠的推理机制将是重要的发展方向。</p>
+          <div class="ad-highlight">
+            🔥 限时特惠：AI 深度学习实战课程，原价 2999 元，今日仅售 199 元！点击立即购买 →
+          </div>
+          <p>学术界也在积极探索更高效的模型架构。Mamba、RWKV 等状态空间模型（SSM）试图在保持 Transformer 级性能的同时，将计算复杂度从二次方降低到线性。</p>
+        </div>
+      </div>
+
+      <!-- Status Bar -->
+      <div style="padding:8px 20px; background: #f1f5f9; border-top:1px solid #e2e8f0; font-size:10px; color:#94a3b8; font-family:monospace; display:flex; justify-content:space-between; flex-shrink:0;">
+        <span>RENDER ENGINE: CHROMIUM SIMULATOR MV3 • HOST: OK</span>
+        <span>COOKIE: DOMAIN_ONLY • LATENCY: 12ms</span>
+      </div>
+    </div>
+
+    <!-- Edge Trigger -->
+    <button class="edge-trigger">
+      <span class="sparkle-icon">✦</span>
+      <span class="label">AI 面板</span>
+      <span class="arrow">›</span>
+    </button>
+
+    <!-- AI Panel (Drawer) -->
+    <div class="ai-panel">
+      <!-- Panel Header -->
+      <div class="panel-header">
+        <div class="brand">
+          <div class="brand-icon">✦</div>
+          <div class="brand-text">
+            <h2>智能网页提取器</h2>
+            <p>AI Browser Companion • MV3</p>
+          </div>
+        </div>
+        <button class="close-btn">✕</button>
+      </div>
+
+      <!-- Panel Tabs -->
+      <div class="panel-tabs">
+        <button class="active">📄 大纲</button>
+        <button>🖼️ 配图</button>
+        <button>📊 表格</button>
+        <button>✏️ 编辑</button>
+      </div>
+
+      <!-- Panel Content -->
+      <div class="panel-content">
+        <div class="summary-card">
+          <h3>📋 AI 提取摘要</h3>
+          <p style="margin-bottom: 8px;"><strong>🧠 核心主题：</strong>深度学习在 NLP 领域的技术突破与未来趋势</p>
+          <p style="margin-bottom: 4px;"><strong>📌 关键要点：</strong></p>
+          <ul style="padding-left: 20px; margin-bottom: 8px;">
+            <li>Transformer → GPT/BERT → 多模态大语言模型演进路径</li>
+            <li>In-Context Learning 使模型无需微调即可适应新任务</li>
+            <li>Mamba/RWKV 等 SSM 架构探索更高效的计算方案</li>
+          </ul>
+          <p style="font-size: 11px; color: #94a3b8;">📍 本地 DOM 提取：正文 1,240 字 | 图片 3 张 | 表格 0 份</p>
+        </div>
+
+        <!-- Template Selector -->
+        <div class="settings-group" style="margin-top: 16px;">
+          <label>提取模板</label>
+          <div class="template-grid">
+            <button class="active">📝 3-5句速读</button>
+            <button>📇 结构化卡片</button>
+            <button>🔗 Mermaid 导图</button>
+            <button>🎨 自定义</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <label>自定义 Prompt</label>
+          <input class="input-field" placeholder="输入您对提取结果的定制要求..." value="提取所有技术术语并附上英文对照，同时总结作者的核心论点">
+        </div>
+
+        <button class="primary-btn" style="width:100%;">
+          ⚡ 一键智能提取
+        </button>
+
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <button class="secondary-btn" style="flex:1;">📥 下载</button>
+          <button class="secondary-btn" style="flex:1;">🔧 规则</button>
+          <button class="secondary-btn" style="flex:1;">⚙️ 设置</button>
+        </div>
+
+        <!-- Chat Messages -->
+        <div style="margin-top: 16px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; gap:8px; align-items:flex-start;">
+            <div style="width:24px;height:24px;background:#eef2ff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#4f46e5;flex-shrink:0;">🧑</div>
+            <div style="flex:1;background:#f8fafc;border-radius:10px;padding:10px 12px;font-size:12px;color:#334155;">
+              翻译为英文，并将技术名词加粗
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;">
+            <div style="width:24px;height:24px;background:linear-gradient(135deg,#4f46e5,#6366f1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0;">✦</div>
+            <div style="flex:1;background:#eef2ff;border-radius:10px;padding:10px 12px;font-size:12px;color:#334155;">
+              好的，已为您将全文翻译为英文，并将 Deep Learning、Transformer、In-Context Learning 等技术名词加粗显示。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Input -->
+      <div class="chat-area">
+        <div class="chat-input-wrap">
+          <input placeholder="输入修改指令，如：翻译为英文、提取技术名词...">
+          <button>发送</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Design Tokens ===== -->
+<div class="section">
+  <div class="section-title">🎨 设计系统 Token</div>
+  <div class="design-grid">
+    <div class="design-card">
+      <div class="card-icon">🎯</div>
+      <h3>色彩体系</h3>
+      <p>以靛蓝 (#4F46E5) 为主色，搭配冷灰背景与白色卡片</p>
+      <ul>
+        <li>Primary: #4F46E5 → #6366F1</li>
+        <li>Surface: #F8FAFC → #FFFFFF</li>
+        <li>Text: #0F172A → #94A3B8</li>
+        <li>Border: #E2E8F0 → #F1F5F9</li>
+      </ul>
+    </div>
+    <div class="design-card">
+      <div class="card-icon">🔤</div>
+      <h3>字体体系</h3>
+      <p>Inter 字族 + 系统后备，多层文字层级</p>
+      <ul>
+        <li>H1: Bold 28px → 标题震撼力</li>
+        <li>H2: Bold 14px → 面板分组标题</li>
+        <li>Body: Regular 15px → 阅读舒适</li>
+        <li>Caption: Regular 11-12px → 辅助信息</li>
+      </ul>
+    </div>
+    <div class="design-card">
+      <div class="card-icon">✨</div>
+      <h3>微交互动效</h3>
+      <p>Spring 弹性动画 + 渐变过渡 + 悬浮反馈</p>
+      <ul>
+        <li>Panel 滑入: cubic-bezier(0.16, 1, 0.3, 1)</li>
+        <li>按钮悬浮: translateY(-1px) + shadow</li>
+        <li>图标脉冲: scale(1.15) 呼吸动画</li>
+        <li>Tab 指示器: 滑动下划线</li>
+      </ul>
+    </div>
+    <div class="design-card">
+      <div class="card-icon">🧩</div>
+      <h3>布局系统</h3>
+      <p>Flexbox 弹性布局 + 玻璃拟态叠加效果</p>
+      <ul>
+        <li>Titlebar: backdrop-filter: blur(20px)</li>
+        <li>Card: border-radius: 12px</li>
+        <li>Input: focus 光圈 + border-color</li>
+        <li>Button group: segmented control 风格</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Interaction Flow ===== -->
+<div class="section">
+  <div class="section-title">🔄 交互流程优化</div>
+  <div class="flow-diagram">
+    <div class="flow-step">
+      <div class="step-icon">🌐</div>
+      <span class="step-label">浏览网页</span>
+      <span class="step-desc">用户在浏览器中导航</span>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      <div class="step-icon">✦</div>
+      <span class="step-label">触发 AI 面板</span>
+      <span class="step-desc">点击悬浮球展开边栏</span>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      <div class="step-icon">⚡</div>
+      <span class="step-label">智能提取</span>
+      <span class="step-desc">一键提取网页结构化信息</span>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      <div class="step-icon">✏️</div>
+      <span class="step-label">交互编辑</span>
+      <span class="step-desc">对话式修改提取结果</span>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">
+      <div class="step-icon">📥</div>
+      <span class="step-label">多格式导出</span>
+      <span class="step-desc">TXT / MD / CSV 一键打包</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Interaction Improvements Detail ===== -->
+<div class="section">
+  <div class="section-title">🔧 交互优化要点详情</div>
+  <div class="design-grid">
+    <div class="design-card">
+      <div class="card-icon">🎯</div>
+      <h3>1. 浏览器模拟器增强</h3>
+      <ul>
+        <li>macOS 风格半透明 titlebar (backdrop-filter blur)</li>
+        <li>地址栏聚焦高亮 + 光圈动画</li>
+        <li>Tab 切换滑动下划线指示器</li>
+        <li>AD 过滤模式切换采用 segmented control</li>
+        <li>内容区舒适阅读版式 (max-width + 优雅排版)</li>
+      </ul>
+    </div>
+    <div class="design-card">
+      <div class="card-icon">🗂️</div>
+      <h3>2. AI 面板交互优化</h3>
+      <ul>
+        <li>Spring 弹性滑入动画，自然流畅</li>
+        <li>Tab 底部滑动指示器增强视觉反馈</li>
+        <li>摘要卡片采用柔和背景区分层次</li>
+        <li>模板选择网格化排版，视觉更清晰</li>
+        <li>聊天区域底部固定，始终可输入</li>
+      </ul>
+    </div>
+    <div class="design-card">
+      <div class="card-icon">🖱️</div>
+      <h3>3. 悬浮触发球优化</h3>
+      <ul>
+        <li>渐变靛蓝配色，视觉更现代</li>
+        <li>Hover 展开效果 (width: 44px → 52px)</li>
+        <li>Sparkle 图标呼吸脉冲动画</li>
+        <li>阴影叠加提升层次感</li>
+        <li>箭头图标 hover 位移反馈</li>
+      </ul>
+    </div>
+    <div class="design-card">
+      <div class="card-icon">💬</div>
+      <h3>4. 对话交互增强</h3>
+      <ul>
+        <li>用户/AI 消息气泡差异化设计</li>
+        <li>AI 头像使用渐变品牌色</li>
+        <li>输入框整合发送按钮 (inline)</li>
+        <li>Focus 态光圈反馈</li>
+        <li>整体风格统一至设计系统</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Footer ===== -->
+<div style="padding: 40px 0 20px; text-align: center; color: rgba(255,255,255,0.2); font-size: 11px; max-width: 1400px; width: 100%; border-top: 1px solid rgba(255,255,255,0.04);">
+  Smart Web Extractor — 交互设计优化方案 v2.0 • 设计系统基于 Ant Design + Inter Font
+</div>
+
+</body>
+</html>

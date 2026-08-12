@@ -1,0 +1,6 @@
+{
+  "name": "Smart Web Extractor",
+  "description": "An AI-powered browser assistant to extract content, images, tables, filter ads, generate summaries, and export into multiple formats with a Bento Grid style interface.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "name": "smart-web-extractor",
+  "buildCommand": "npx vite build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "@vercel/node@5",
+      "includeFiles": "**"
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
