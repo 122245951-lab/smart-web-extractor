@@ -32,12 +32,11 @@
     chrome.runtime.onMessage.addListener(handleMessage);
   }
 
-  /** 检测并应用暗色主题 */
+  /** 应用主题 —— 设计稿为浅色（Claude 陶土色），面板固定使用浅色主题 */
   function detectTheme() {
-    var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     var root = document.getElementById('swe-root');
     if (root) {
-      root.setAttribute('data-swe-theme', isDark ? 'dark' : 'light');
+      root.setAttribute('data-swe-theme', 'light');
     }
   }
 
@@ -47,22 +46,19 @@
     var btn = document.createElement('button');
     btn.id = 'swe-floating-btn';
     btn.className = 'swe-floating-btn';
-    btn.innerHTML = '&#9881;';
+    // Brand mark (filled 4-point sparkle + accent dots), matching icons/icon128.png
+    btn.innerHTML = '<svg class="swe-icon--filled" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path fill="currentColor" stroke="none" d="M12 4.2L13.6 10.4L19.8 12L13.6 13.6L12 19.8L10.4 13.6L4.2 12L10.4 10.4Z"/>' +
+      '<circle cx="18.6" cy="5.4" r="1.25" fill="currentColor" stroke="none"/>' +
+      '<circle cx="5.4" cy="18.6" r="0.95" fill="currentColor" stroke="none" opacity="0.75"/></svg>';
     btn.title = SWE.t('panel.open.settings');
     btn.addEventListener('click', function () {
-      if (floatingPanel) {
-        floatingPanel.state = 4; // PanelState.CONFIGURING
-        floatingPanel.panel.classList.add('swe-panel--open');
-        floatingPanel.tab.classList.add('swe-edge-tab--hidden');
-        floatingPanel.showConfig();
-      } else if (window.SWEFloatingPanel) {
+      if (!floatingPanel && window.SWEFloatingPanel) {
         floatingPanel = new window.SWEFloatingPanel();
         floatingPanel.init();
-        floatingPanel.state = 4; // PanelState.CONFIGURING
-        floatingPanel.panel.classList.add('swe-panel--open');
-        floatingPanel.tab.classList.add('swe-edge-tab--hidden');
-        floatingPanel.showConfig();
       }
+      if (floatingPanel) floatingPanel.openConfig();
     });
     document.body.appendChild(btn);
   }
@@ -90,6 +86,21 @@
         break;
       case 'ad:clear_preview':
         SWE.AdFilter.clearPreview();
+        sendResponse({ success: true });
+        break;
+      case 'settings:updated':
+        // The settings page broadcasts this after saving. Without a handler the
+        // already-open panel would keep showing stale provider / vault / rules.
+        if (floatingPanel && typeof floatingPanel.refreshSettingsPanel === 'function') {
+          try { floatingPanel.refreshSettingsPanel(); } catch (e) {}
+        }
+        if (window.SWE && SWE.loadLang) {
+          // language may have changed — re-translate the open panel
+          SWE.loadLang(function () {
+            var root = document.getElementById('swe-root');
+            if (root && SWE.translateDom) SWE.translateDom(root);
+          });
+        }
         sendResponse({ success: true });
         break;
     }

@@ -24,6 +24,14 @@ coverage/
 前端.zip
 extracted_frontend/
 
+# ---- Release artifacts / design bundles ----
+# ⭐最终产物/ 是打包产物（与 plugin/ 内容重复），UI/ 是设计稿压缩包，
+# 二进制文档与发布 zip 同样不入库，避免仓库膨胀
+⭐最终产物/
+UI/
+*.docx
+*.zip
+
 # ---- Editor / OS ----
 .vscode/
 .idea/

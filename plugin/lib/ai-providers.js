@@ -225,4 +225,80 @@
       return { success: false, message: SWE.t('error.network') };
     }
   };
+  /* ------------------------------------------------------------------
+     Transport routing
+     ------------------------------------------------------------------
+     A content script shares the HOST PAGE's CSP, so a direct fetch() to the AI
+     endpoints is blocked on any site whose `connect-src` does not allow them.
+     The background service worker has host_permissions and its own CSP, so all
+     AI traffic from content scripts must be routed through it.
+     The worker itself (no `window`) and extension pages (chrome-extension:)
+     call the providers directly — the manifest CSP already permits them. */
+  function routeViaBackground() {
+    try {
+      return typeof window !== 'undefined' &&
+        window.location &&
+        window.location.protocol !== 'chrome-extension:' &&
+        typeof chrome !== 'undefined' &&
+        chrome.runtime && !!chrome.runtime.sendMessage;
+    } catch (e) { return false; }
+  }
+
+  var directCallAI = SWE.callAI;
+  var directCallAIStream = SWE.callAIStream;
+  var directTestConnection = SWE.testConnection;
+
+  SWE.callAI = function (opts) {
+    if (!routeViaBackground()) return directCallAI(opts);
+    return new Promise(function (resolve, reject) {
+      chrome.runtime.sendMessage({ type: 'ai:analyze', payload: opts }, function (res) {
+        var err = chrome.runtime.lastError;
+        if (err) return reject(new Error(err.message));
+        if (res && res.success) return resolve(res.data);
+        var e = new Error((res && res.message) || 'AI request failed');
+        if (res && res.error) e.code = res.error;
+        reject(e);
+      });
+    });
+  };
+
+  SWE.testConnection = function (provider, apiKey) {
+    if (!routeViaBackground()) return directTestConnection(provider, apiKey);
+    return new Promise(function (resolve) {
+      chrome.runtime.sendMessage(
+        { type: 'ai:test', payload: { provider: provider, apiKey: apiKey } },
+        function (res) {
+          var err = chrome.runtime.lastError;
+          if (err) return resolve({ success: false, message: err.message });
+          resolve(res || { success: false, message: 'No response' });
+        }
+      );
+    });
+  };
+
+  SWE.callAIStream = function (opts, onChunk, onDone, onError) {
+    if (!routeViaBackground()) return directCallAIStream(opts, onChunk, onDone, onError);
+    var port = chrome.runtime.connect({ name: 'ai-stream' });
+    port.onMessage.addListener(function (msg) {
+      if (!msg) return;
+      if (msg.type === 'ai:stream:chunk') {
+        if (onChunk) onChunk(msg.chunk);
+      } else if (msg.type === 'ai:stream:done') {
+        try { port.disconnect(); } catch (e) {}
+        if (msg.error) { if (onError) onError(new Error(msg.error)); }
+        else if (onDone) onDone();
+      }
+    });
+    port.onDisconnect.addListener(function () {
+      if (chrome.runtime && chrome.runtime.lastError && onError) {
+        onError(new Error(chrome.runtime.lastError.message || 'Port disconnected'));
+      }
+    });
+    try {
+      port.postMessage({ type: 'ai:stream', payload: opts });
+    } catch (e) {
+      if (onError) onError(e);
+    }
+    return port;
+  };
 })();
